@@ -1,0 +1,3 @@
+<?php
+
+// Xethron/migrations-generator
