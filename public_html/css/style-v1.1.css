@@ -30,6 +30,8 @@ a:hover, a:focus {text-decoration: none;}
 .user_nav {
     position: fixed!important; 
     z-index: 2;
+    background-color: #4db6ac !important;
+    border-color: #4db6ac !important;
 }
 .user_nav.successful {
     background-color: #4caf50!important;
@@ -79,6 +81,10 @@ input[type=number]::-webkit-outer-spin-button {
 .col-1-5 {
   max-width: 12.5% !important; /* 1.5 / 12 = 12.5% */
   flex: 0 0 12.5% !important;
+}
+
+.student-theme{ 
+    color: #4b0082;
 }
 
 .attractive-heading-1 {

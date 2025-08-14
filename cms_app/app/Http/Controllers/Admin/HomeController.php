@@ -48,14 +48,11 @@ class HomeController extends Controller
         $admin = Auth::guard('admin')->user();
         $permissions = $admin->getAllPermissions();
         $role = $admin->getRoleNames()->first();
-        $search_by = config('setting.search_student_by');
-        $search_label = config('setting.search_label');
-        $batch_label = config('setting.batch_label');
-        $allow_field = config('setting.allow_field');
-        $reg_no_label = config('setting.reg_no_label');
-        $enable_echelon_field = config('setting.enable_echelon_field');
-        $student_type = config('setting.student_type');
-        $student_form_field = config('setting.student_admission_field');
+
+        // dynamic by organization ================
+        $dynamic_data = $this->get_dynamic_data($admin);
+        // dynamic by organization
+        
         $echelons = [];
         $batches = [];
         $years = [];
@@ -67,19 +64,19 @@ class HomeController extends Controller
         if ($role == 'admin') {
             $branch = branch::all();
             if (sizeof($branch) == 1) {
-                if (in_array('echelon', $search_by)) {                
+                if (in_array('echelon', $dynamic_data['search_by'])) {                
                     $this->get_echelons_by_branch($branch[0]->id);
                 }  
                 $this->get_batches_by_branch($branch[0]->id);                             
             }
         } else {
             $branch = branch::find($admin->branch_id)->get();
-            if (in_array('echelon', $search_by)) {                
+            if (in_array('echelon', $dynamic_data['search_by'])) {                
                 $this->get_echelons_by_branch($admin->branch_id);
             }               
             $this->get_batches_by_branch($admin->branch_id);
         }
-        if ($enable_echelon_field) {            
+        if ($dynamic_data['enable_echelon_field']) {            
             $echelons = \App\Model\Admin\echelon::where('branch_id', $branch[0]->id)->get();
         }
         $random = random_number::first();
@@ -134,9 +131,28 @@ class HomeController extends Controller
             }
         }
         
-        return view('admin.admin-home', compact('role', 'permissions', 'branch', 'echelons', 'batches', 'search_label', 'batch_label' ,'search_by', 'years', 'enable_echelon_field', 'allow_field', 'reg_no_label', 'student_type', 'latest_unpaid', 'admin', 'student_form_field'));
+        return view('admin.admin-home', compact('role', 'permissions', 'branch', 'echelons', 'batches', 'years', 'latest_unpaid', 'admin', 'dynamic_data'));
     }
 
+    protected function get_dynamic_data($admin){
+        $search_by = config('setting.search_student_by');
+        $search_label = config('setting.search_label');
+        $batch_label = config('setting.batch_label');
+        // $allow_field = config('setting.allow_field');
+        $reg_no_label = config('setting.reg_no_label');
+        $enable_echelon_field = config('setting.enable_echelon_field');
+        // $student_type = config('setting.student_type');
+
+        if($admin->branches->organizations->system_type == 'school'){
+            $batch_label = "Section";
+        }
+        if($admin->branches->organizations->system_type == 'single'){
+            $search_by = ["batch"];
+            $search_label = "Batch";
+        }
+
+        return ['search_by' => $search_by, 'search_label' => $search_label, 'batch_label' => $batch_label, 'reg_no_label' => $reg_no_label, 'enable_echelon_field' => $enable_echelon_field];
+    }
 
     protected function get_batches_by_branch($branch_id)
     {

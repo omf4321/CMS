@@ -23,7 +23,6 @@ class BatchController extends Controller
     public function __construct()
     {
         $this->middleware('auth:admin');
-        $this->middleware('cacheResponse');
     }
 
     public function admin_batch_list()
@@ -35,33 +34,32 @@ class BatchController extends Controller
     public function admin_batch_add(Request $request)
     {
         // return response()->json($request->all());
-        $this->validate($request, [
-           'name'=> 'required',
-           'branch_id'=> 'required',
-           'echelon_id'=> 'required',
-           'course_id'=> 'required',
-           'group_id'=> 'required',
-           'reg_base'=> 'required',
-           'start_from'=> 'required',
-           'end_to'=> 'required',
-           'time'=> 'required'
+        $validated = $this->validate($request, [
+            'name'               => 'required|string|max:191',
+            'description'        => 'nullable|string|max:191',
+            'branch_id'          => 'required|integer|exists:branches,id',
+            'echelon_id'         => 'required|integer|exists:echelons,id',
+            'course_id'          => 'required|integer|exists:courses,id',
+            'active'             => 'nullable|boolean',
+            'group_id'           => 'required|integer',
+            'reg_base'           => 'required|integer|min:0',
+            'fee_type'           => 'required|in:monthly_fee,course_fee,both',
+            'monthly_fee'        => 'nullable|integer|min:0',
+            'course_fee'         => 'nullable|integer|min:0',
+            'admission_fee'      => 'nullable|numeric|min:0',
+            'monthly_fee_mode'   => 'required|in:current,previous',
+            'admission_fee_mode' => 'required|in:seperate,combine',
+            'start_from'         => 'required|date',
+            'end_to'             => 'required|date|after_or_equal:start_from',
+            'time'               => 'nullable|date_format:H:i'
         ]);
 
-        $admin_batch = new batch;
-        $admin_batch->name = $request->name;
-        $admin_batch->description = $request->description;
-        $admin_batch->branch_id = $request->branch_id;
-        $admin_batch->echelon_id = $request->echelon_id;
-        $admin_batch->course_id = $request->course_id;
-        $admin_batch->group_id = $request->group_id;
-        $admin_batch->reg_base = $request->reg_base;
-        $admin_batch->monthly_fee = $request->monthly_fee;
-        $admin_batch->course_fee = $request->course_fee;
-        $admin_batch->start_from = $request->start_from;
-        $admin_batch->end_to = $request->end_to;
-        $admin_batch->time = $request->time;
-        $admin_batch->save();
+        $batch = Batch::create($validated);
         Cache::flush();
+        return response()->json([
+            'message' => 'Batch created successfully',
+            'data'    => $batch
+        ], 201);
     }
 
     public function admin_batch_edit(Request $request, $id)

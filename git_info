@@ -1,0 +1,15 @@
+// to see changes
+git status
+
+// to state all changes
+git add .
+// or for specific path
+git add path/to/your/file.php
+
+// commit changes
+git commit -m "message"
+
+// push to remote
+git push origin main 
+git push origin master
+

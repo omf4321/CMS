@@ -25,7 +25,6 @@
                     </template>
                 </v-container>
             </template>
-            <!-- <v-icon class="m-l-10 cur-p float-right pos-rel" style="top: 3px" @click="delete_idb">refresh</v-icon> -->
             <v-divider class="my-3"></v-divider>
             <template>
                 <div>
@@ -47,13 +46,6 @@
                             <v-col cols="6" md="1" sm="4" class="pa-2">
                                 <v-btn class="tiny-btn" small color="default" @click="admin_student_list">Go</v-btn>
                             </v-col>
-                            <!-- <v-col cols="2" class="pa-0 mr-2">
-                                <v-text-field dense outlined v-model="search2" append-icon="search" label="Search 3"></v-text-field>
-                            </v-col> -->
-                            <!-- <v-col cols="1" class="pa-0">
-                                <v-icon dense @click="clear">backspace</v-icon>
-                            </v-col> -->
-                            <!-- @add_item_dialog -->
                         </v-layout>
                     </v-toolbar>
 
@@ -312,7 +304,7 @@
                     
                     pagination: {
                       page: 1,
-                      itemsPerPage: 10,
+                      itemsPerPage: 25,
                       sortBy: [],
                       sortDesc: [],
                       groupBy: [],
@@ -333,7 +325,6 @@
                     subject: [],
                     original_subject: [],
                     gender: [{'value': 'male', 'text': 'Male'}, {'value': 'female', 'text': 'Female'}],
-                    student_type: window_student_type,
                     // @list_search_data
                     search: '',
                     search1: '',
@@ -351,7 +342,7 @@
                     dialog: false,
                     editedIndex: -1,
                     editedId: null,
-                    dialogItem: {id: '', reg_no: '', name: '', gender: '', branch_id: '', echelon_id: '', batch_id: '', institution_id: '', institution_name: '', school_roll: '', optional_id: '', mobile: '', mobile2: '', monthly_fee: '', course_fee: '', date_of_admit: '', date_of_birth: '', father_name: '', mother_name: '', guardian_name: '', student_type: window_student_type[0].value, address: '', running_month: '', year: '', inactive_month: '', drop_date: '', photo: '', status: '', online_exam: false, online_class: false, transfer_type: ''},
+                    dialogItem: {id: '', reg_no: '', name: '', gender: '', branch_id: '', echelon_id: '', batch_id: '', institution_id: '', institution_name: '', school_roll: '', optional_id: '', mobile: '', mobile2: '', monthly_fee: '', course_fee: '', date_of_admit: '', date_of_birth: '', father_name: '', mother_name: '', guardian_name: '', address: '', running_month: '', year: '', inactive_month: '', drop_date: '', photo: '', status: '', online_exam: false, online_class: false, transfer_type: ''},
                     rules: {
                         required: value => !!value || 'required.',
                         mobile: value => !!value && value.length == 11 || '11 numbers needed',
@@ -382,24 +373,20 @@
                     internal_reload: false,
                     force_update: false,
                     change_credential: false,
-                    search_by_label: window_search_label,
-                    enable_echelon_field: window_enable_echelon_field,
-                    batch_label: window_batch_label,
-                    student_admission_fields: [],
-                    form: {},
-                    districts: [],
-                    boards: [],
-                    passing_years: []
+                    search_by_label: window.appData.search_label,
+                    enable_echelon_field: window.appData.enable_echelon_field,
+                    batch_label: window.appData.batch_label,
+                    student_admission_fields: []
 
                 } //end return
             },
             // @router_permission
             beforeRouteEnter(to, from, next) {
-                if (window_latest_unpaid.overdue == 'true') {
+                if (window.appData.latest_unpaid.overdue == 'true') {
                     next('/billing_invoice')
                 }
-                let p = window_admin_permissions.findIndex(x => x.name == 'view_student');
-                if (p > -1 || window_admin_role == 'admin' || window_admin_role == 'superadmin') {
+                let p = window.appData.admin_permissions.findIndex(x => x.name == 'view_student');
+                if (p > -1 || window.appData.admin_role == 'admin' || window.appData.admin_role == 'superadmin') {
                     next()
                 } else {
                     next('/')
@@ -415,44 +402,44 @@
 
             computed: {
                 formTitle() {
-                        return this.editedIndex === -1 ? 'New Student' : 'Edit Student'
-                    },
-                    itemsSorted: function() {
-                        // return _.orderBy(this.items, this.sortKey, this.sortOrder);
-                        // const { name, reg_no, related_batch_name, items } = this                        
-                        var items = this.rows
-                            .filter(item =>
-                                item.id.toString().indexOf(this.search) > -1 ||
-                                item.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1 ||
-                                item.gender.toLowerCase().indexOf(this.search.toLowerCase()) > -1 ||
-                                item.institutions.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1 ||
-                                item.branches.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1 ||
-                                item.batches.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1 ||
-                                item.batches.echelons.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1 ||
-                                item.reg_no.toString().indexOf(this.search) > -1 ||
-                                item.mobile.toString().indexOf(this.search) > -1)
-                            .filter(item =>
-                                item.id.toString().indexOf(this.search1) > -1 ||
-                                item.name.toLowerCase().indexOf(this.search1.toLowerCase()) > -1 ||
-                                item.gender.toLowerCase().indexOf(this.search1.toLowerCase()) > -1 ||
-                                item.institutions.name.toLowerCase().indexOf(this.search1.toLowerCase()) > -1 ||
-                                item.branches.name.toLowerCase().indexOf(this.search1.toLowerCase()) > -1 ||
-                                item.batches.name.toLowerCase().indexOf(this.search1.toLowerCase()) > -1 ||
-                                item.batches.echelons.name.toLowerCase().indexOf(this.search1.toLowerCase()) > -1 ||
-                                item.reg_no.toString().indexOf(this.search1) > -1 ||
-                                item.mobile.toString().indexOf(this.search1) > -1)
-                            .filter(item =>
-                                item.id.toString().indexOf(this.search2) > -1 ||
-                                item.name.toLowerCase().indexOf(this.search2.toLowerCase()) > -1 ||
-                                item.gender.toLowerCase().indexOf(this.search2.toLowerCase()) > -1 ||
-                                item.institutions.name.toLowerCase().indexOf(this.search2.toLowerCase()) > -1 ||
-                                item.branches.name.toLowerCase().indexOf(this.search2.toLowerCase()) > -1 ||
-                                item.batches.name.toLowerCase().indexOf(this.search2.toLowerCase()) > -1 ||
-                                item.batches.echelons.name.toLowerCase().indexOf(this.search2.toLowerCase()) > -1 ||
-                                item.reg_no.toString().indexOf(this.search2) > -1 ||
-                                item.mobile.toString().indexOf(this.search2) > -1);
-                        return items
-                    },
+                    return this.editedIndex === -1 ? 'New Student' : 'Edit Student'
+                },
+                itemsSorted: function() {
+                    // return _.orderBy(this.items, this.sortKey, this.sortOrder);
+                    // const { name, reg_no, related_batch_name, items } = this                        
+                    var items = this.rows
+                        .filter(item =>
+                            item.id.toString().indexOf(this.search) > -1 ||
+                            item.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1 ||
+                            item.gender.toLowerCase().indexOf(this.search.toLowerCase()) > -1 ||
+                            item.institutions.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1 ||
+                            item.branches.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1 ||
+                            item.batches.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1 ||
+                            item.batches.echelons.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1 ||
+                            item.reg_no.toString().indexOf(this.search) > -1 ||
+                            item.mobile.toString().indexOf(this.search) > -1)
+                        .filter(item =>
+                            item.id.toString().indexOf(this.search1) > -1 ||
+                            item.name.toLowerCase().indexOf(this.search1.toLowerCase()) > -1 ||
+                            item.gender.toLowerCase().indexOf(this.search1.toLowerCase()) > -1 ||
+                            item.institutions.name.toLowerCase().indexOf(this.search1.toLowerCase()) > -1 ||
+                            item.branches.name.toLowerCase().indexOf(this.search1.toLowerCase()) > -1 ||
+                            item.batches.name.toLowerCase().indexOf(this.search1.toLowerCase()) > -1 ||
+                            item.batches.echelons.name.toLowerCase().indexOf(this.search1.toLowerCase()) > -1 ||
+                            item.reg_no.toString().indexOf(this.search1) > -1 ||
+                            item.mobile.toString().indexOf(this.search1) > -1)
+                        .filter(item =>
+                            item.id.toString().indexOf(this.search2) > -1 ||
+                            item.name.toLowerCase().indexOf(this.search2.toLowerCase()) > -1 ||
+                            item.gender.toLowerCase().indexOf(this.search2.toLowerCase()) > -1 ||
+                            item.institutions.name.toLowerCase().indexOf(this.search2.toLowerCase()) > -1 ||
+                            item.branches.name.toLowerCase().indexOf(this.search2.toLowerCase()) > -1 ||
+                            item.batches.name.toLowerCase().indexOf(this.search2.toLowerCase()) > -1 ||
+                            item.batches.echelons.name.toLowerCase().indexOf(this.search2.toLowerCase()) > -1 ||
+                            item.reg_no.toString().indexOf(this.search2) > -1 ||
+                            item.mobile.toString().indexOf(this.search2) > -1);
+                    return items
+                },
             },
 
             watch: {
@@ -464,17 +451,17 @@
             methods: {
                 // @add_item_method
                 admin_branch_list() {
-                    if (window_search_by.includes('batch')) {
-                        this.search_by_label = window_batch_label
+                    if (window.appData.search_by.includes('batch')) {
+                        this.search_by_label = window.appData.batch_label
                     }
-                    this.branch = window_branch;
+                    this.branch = window.appData.branch;
                     if (this.branch.length == 1) {
                         this.dialogItem.branch_id = this.branch[0].id
                         this.search_branch = this.branch[0].id
                         this.admin_batch_list()
                         this.admin_institution_list(this.dialogItem.branch_id);
-                        this.original_batch = window_batches
-                        this.original_echelon = window_echelons
+                        this.original_batch = window.appData.batches
+                        this.original_echelon = window.appData.echelons
                         if (this.enable_echelon_field) {
                             this.echelon = this.original_echelon.map(arr => { return { value: arr['id'], text: arr['name'] } })
                         }
@@ -508,15 +495,15 @@
                     });
                 },
                 search_by_list() {
-                    if (window_search_by.includes('batch')) {
+                    if (window.appData.search_by.includes('batch')) {
                         this.search_by_item = this.original_batch.map(arr => { return { value: arr['id'], text: arr['name'] } })
                         this.batch = this.original_batch.map(arr => { return { value: arr['id'], text: arr['name'] } })
                     }
-                    if (window_search_by.includes('echelon')) {
+                    if (window.appData.search_by.includes('echelon')) {
                         this.search_by_item = this.original_echelon.map(arr => { return { value: arr['id'], text: arr['name'] } })
                     }
-                    if (window_search_by.includes('year')) {
-                        this.search_by_item = window_years.map(arr => { return { value: arr, text: arr } })
+                    if (window.appData.search_by.includes('year')) {
+                        this.search_by_item = window.appData.years.map(arr => { return { value: arr, text: arr } })
                     }
                 },
                 initialize_form() {
@@ -611,10 +598,10 @@
                 get_branch_item() {
                     if (this.branch.length > 1) {
                         this.dialogItem.branch_id = this.search_branch
-                        if (window_search_by.includes('branch')) {
+                        if (window.appData.search_by.includes('branch')) {
                             this.admin_student_list('asc');
                         }
-                        if (!window_search_by.includes('batch')) {
+                        if (!window.appData.search_by.includes('batch')) {
                             this.admin_echelon_list()
                         }
                         this.admin_batch_list()
@@ -665,16 +652,11 @@
                                 this.close()
                                 $('.user_nav').addClass('successful')
                                 this.loading = false;
-                                setTimeout(function() {
-                                        $('.user_nav').removeClass('successful')
-                                }.bind(this), 4000)
+                                this.$notifyClass.success();
                                 
                             }, error => {
                                 this.form_validation = error.response.data.msg
-                                $('.user_nav').addClass('denied')
-                                setTimeout(function() {
-                                    $('.user_nav').removeClass('denied')
-                                }.bind(this), 3000)
+                                this.$notifyClass.denied();
                                 this.loading = false;
                             });
                         }
@@ -695,13 +677,11 @@
                                 this.rows.push(response.data.student)
                                 // this.initialize_idb()
                                 this.close()
-                                $('.user_nav').addClass('successful')
-                                setTimeout(function() {$('.user_nav').removeClass('successful') }.bind(this), 3000)
+                                this.$notifyClass.success();
                                 this.loading = false;
                             }, error => {
                                 this.form_validation = error.response.data.msg
-                                $('.user_nav').addClass('denied')
-                                setTimeout(function() {$('.user_nav').removeClass('denied') }.bind(this), 3000)
+                                this.$notifyClass.denied();
                                 this.loading = false;
                             });
                         }
@@ -768,23 +748,17 @@
                         const index = this.rows.findIndex(x => x.id == item.id);
                         this.axios.post('/admin/request/admin_student_delete/' + item.id).then(response => {
                             this.rows.splice(index, 1)
-                            $('.user_nav').addClass('successful')
-                            // this.initialize_idb()
-                            setTimeout(function() {
-                                $('.user_nav').removeClass('successful')
-                            }.bind(this), 3000)
+                            this.$notifyClass.success();
                         }, error => {
                             alert(error.response.data.msg)
-                            $('.user_nav').addClass('denied')
-                            setTimeout(function() {
-                                $('.user_nav').removeClass('denied')
-                            }.bind(this), 3000)
+                            this.$notifyClass.denied();
                         });
                     }
                 },
                 // @edit_item_method
                 // open dialog
                 editItem(item) {
+                    console.log(item)
                     this.form_validation = ''
                     this.editedIndex = this.rows.findIndex(x => x.id == item.id);
                     this.dialogItem = Object.assign({}, item)
@@ -799,6 +773,7 @@
                     this.dialogItem.password = this.rows[this.editedIndex].users ? this.rows[this.editedIndex].users.password_text : null
                     this.dialogItem.date_of_admit = this.formatDate(this.dialogItem.date_of_admit)
                     this.dialogItem.date_of_birth = this.formatDate(this.dialogItem.date_of_birth)
+                    this.dialogItem.echelon_id = item.batches.echelon_id
                     this.get_subject()
                     this.dialog = true
                     if (this.rows[this.editedIndex].photo) {
@@ -853,10 +828,7 @@
                                         this.student_filter = 'present'
                                     }
                                     this.active_dialog = false
-                                    $('.user_nav').addClass('successful')
-                                    setTimeout(function() {
-                                        $('.user_nav').removeClass('successful')
-                                    }.bind(this), 3000)
+                                    this.$notifyClass.success();
                                     this.$refs.form_active.reset()
                                 }
                                 // this.initialize_idb()
@@ -872,8 +844,7 @@
                                     this.pagination.sortBy = ['updated_at']
                                     this.pagination.descending = [true]
                                     this.active_dialog = false
-                                    $('.user_nav').addClass('successful')
-                                    setTimeout(function() {$('.user_nav').removeClass('successful') }.bind(this), 3000)
+                                    this.$notifyClass.success();
                                     this.$refs.form_active.reset()
                                 }
                                 // this.initialize_idb()

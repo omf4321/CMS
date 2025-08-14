@@ -72,24 +72,23 @@
 
         @if (Auth::guard('admin')->check())
             <script type="text/javascript">
-                var window_user_role = "";
-                var window_admin_role = {!!json_encode($role)!!};
-                var window_admin_permissions = {!!json_encode($permissions)!!};
-                var window_branch = {!!json_encode($branch)!!};
-                var window_echelons = {!!json_encode($echelons)!!};
-                var window_batches = {!!json_encode($batches)!!};
-                var window_years = {!!json_encode($years)!!};
-                var window_branch_id = window_branch.id
-                var window_search_label = {!!json_encode($search_label)!!};
-                var window_batch_label = {!!json_encode($batch_label)!!};
-                var window_search_by = {!!json_encode($search_by)!!};
-                var window_allow_field = {!!json_encode($allow_field)!!};
-                var window_reg_no_label = {!!json_encode($reg_no_label)!!};
-                var window_student_type = {!!json_encode($student_type)!!};
-                var window_enable_echelon_field = {!!json_encode($enable_echelon_field)!!};
-                var window_latest_unpaid = {!!json_encode($latest_unpaid)!!}
-                var window_student_field = {!!json_encode($student_form_field)!!}
-                // var window_latest_unpaid = {}
+                
+                window.appData = {
+                    user_role: "",
+                    admin_role: {!! json_encode($role) !!},
+                    admin_permissions: {!! json_encode($permissions) !!},
+                    branch: {!! json_encode($branch) !!},
+                    echelons: {!! json_encode($echelons) !!},
+                    batches: {!! json_encode($batches) !!},
+                    years: {!! json_encode($years) !!},
+                    branch_id: {!! json_encode($branch['id'] ?? null) !!},
+                    search_label: {!! json_encode($dynamic_data['search_label']) !!},
+                    batch_label: {!! json_encode($dynamic_data['batch_label']) !!},
+                    search_by: {!! json_encode($dynamic_data['search_by']) !!},
+                    reg_no_label: {!! json_encode($dynamic_data['reg_no_label']) !!},
+                    enable_echelon_field: {!! json_encode($dynamic_data['enable_echelon_field']) !!},
+                    latest_unpaid: {!! json_encode($latest_unpaid) !!}
+                };
             </script>
         @endif
     </head>
@@ -118,7 +117,7 @@
                         </v-list>
                     </v-navigation-drawer>
                     {{-- ============== Top Menu ============== --}}
-                    <v-app-bar elevate="1" color="teal lighten-2" class="user_nav p-10" style="height: 85px;">
+                    <v-app-bar elevate="1" class="user_nav p-10" style="height: 85px;">
                         <v-app-bar-nav-icon clipped-left @click.native="drawer = !drawer" color="white"></v-app-bar-nav-icon>
                         <img src="/image/logo_1.png" alt="John" width="100" style="margin-right: 50px; margin-left: 20px;" />
                         
@@ -200,7 +199,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> 
         <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script> 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
-        <script type="text/javascript" src="{{ asset('js/app-v1.1.js?v=11') }}"></script> {{-- 47 --}}
+        <script type="text/javascript" src="{{ asset('js/app-v1.1.js?v=2') }}"></script> {{-- 47 --}}
         <script type="text/javascript" src="{{ asset('js/printThis.js') }}"></script>
         <script>
           function toggleMenu() {

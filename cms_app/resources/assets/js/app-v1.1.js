@@ -26,6 +26,10 @@ Vue.use(VueCookies)
 // set default config
 VueCookies.config('7d')
 
+// toggleClass
+import notifyClass from "./helpers/notifyClass";
+Vue.prototype.$notifyClass = notifyClass;
+
 // import htmlEditor from './components/admin/question/html-editor'
 
 import router from './router'
@@ -36,29 +40,29 @@ Vue.mixin({
 
     data: function() {
         return {
-            reg_no_label: window_reg_no_label
+            reg_no_label: window.appData.reg_no_label
         }
     },
     methods: {
         // those method only works on tamplate not in another vue component method
         check_permission(permission){
-            let p = window_admin_permissions.findIndex(x => x.name==permission);
-            if (p>-1 || window_admin_role=="superadmin" || window_admin_role == "admin") {return true} else {return false}
+            let p = window.appData.admin_permissions.findIndex(x => x.name==permission);
+            if (p>-1 || window.appData.admin_role=="superadmin" || window.appData.admin_role == "admin") {return true} else {return false}
         },
         is_admin(){
-            if (window_admin_role=="superadmin" || window_admin_role == "admin") {return true} else{return false}
+            if (window.appData.admin_role=="superadmin" || window.appData.admin_role == "admin") {return true} else{return false}
         },
         is_not_admin(){
-            if (window_admin_role=="superadmin" || window_admin_role == "admin") {return false} else {return true}
+            if (window.appData.admin_role=="superadmin" || window.appData.admin_role == "admin") {return false} else {return true}
         },
         is_super_admin(){
-            if (window_admin_role=="superadmin") {return true} else {return false}
+            if (window.appData.admin_role=="superadmin") {return true} else {return false}
         },        
         has_role(role){
             return false
         },
         allow_field(field){
-            if (window_allow_field.includes(field)) {return true}
+            if (window.appData.allow_field.includes(field)) {return true}
             return false
         }
     }//end of method
@@ -71,7 +75,7 @@ const app = new Vue({
     data: {
         drawer: null,
         menus: [],
-        role: window_admin_role,
+        role: window.appData.admin_role,
         random: '',
         menuVisible: false
     },

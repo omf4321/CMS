@@ -22,7 +22,7 @@ return [
 	'search_label'          => 'Year',
 	'batch_label'           => 'Batch',
 	'enable_echelon_field' => true,
-	'reg_no_label'		   => 'Reg No',
+	'reg_no_label'		   => 'Roll No',
 	'allow_field' => ['exam_reg_no', 'blood_group', 'exam_time', 'reference', 'course_fee', 'booking_fee', 'discount'],
 	'student_type' => [['value' => 'general', 'text' => 'General'], ['value' => 'test_only', 'text' => 'Test Only']],
 	'permissions' => [
@@ -81,7 +81,7 @@ return [
 			"fields" => [
 				[ "name" => "name", "type" => "text", "label" => "Student Name", "rules" => ["required"], "colSize" => 4 ],
 				[ "name" => "name_bn", "type" => "text", "label" => "Student Name (Bangla)", "colSize" => 4 ],
-				[ "name" => "gender", "type" => "select", "label" => "Gender", "options" => ["Male", "Female", "Other"], "rules" => ["required"], "colSize" => 4 ],
+				[ "name" => "gender", "type" => "select", "label" => "Gender", "options" => ["male", "female", "other"], "rules" => ["required"], "colSize" => 4 ],
 				[ "name" => "date_of_birth", "type" => "date", "label" => "Date of Birth", "rules" => ["required"], "colSize" => 4 ],
 				[ "name" => "birth_certificate_no", "type" => "text", "label" => "Birth Certificate No", "colSize" => 4 ],
 				[ "name" => "religion", "type" => "select", "label" => "Religion", "options" => ["Islam", "Hindu", "Buddist", "Christian"], "colSize" => 4 ],
