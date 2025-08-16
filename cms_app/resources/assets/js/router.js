@@ -47,6 +47,7 @@ import question_select from './components/admin/question/question_select'
 import question_view from './components/admin/question/question_view'
 // import question_print from './components/admin/question/question_print'
 
+import fee_scheme from './components/admin/payment/fee_scheme'
 import student_payment_list from './components/admin/payment/student_payment_list'
 import student_payment_report from './components/admin/payment/student_payment_report'
 import student_payment from './components/admin/payment/student_payment'
@@ -143,6 +144,7 @@ var router = new Router({
         { path: '/question_view/:id', name: 'question_view', component: question_view },
         // { path: '/question_print/:id', name: 'question_print', component: question_print },
 
+        { path: '/fee_scheme', name: 'fee_scheme', component: fee_scheme },
         { path: '/student_payment_list', name: 'student_payment_list', component: student_payment_list },
         { path: '/student_payment_report', name: 'student_payment_report', component: student_payment_report },
         { path: '/student_payment', name: 'student_payment', component: student_payment },

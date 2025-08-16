@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\payment\FeeSchemeController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -327,6 +329,12 @@ Route::post('/admin/question/question_print_update', 'question\QuestionControlle
 /* ============================================================================
 						Payment PaymentController
 ===============================================================================*/
+
+
+Route::prefix('admin')->group(function () {
+    Route::resource('fee-schemes', FeeSchemeController::class);
+});
+
 Route::post('/admin/payment/get_student_payment_list', 'payment\PaymentController@get_student_payment_list');
 Route::post('/admin/payment/edit_student_payment_list/{payment_id}', 'payment\PaymentController@edit_student_payment_list');
 Route::get('/admin/payment/get_student_payment/{reg_no}/{status}', 'payment\PaymentController@get_student_payment');
